@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/drawPicture.js"></script>
+    <script src="js/evolution.js"></script>
+    <script src="js/pixels.js"></script>
+
+    <script src="js/runnable.js" defer></script>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Target</th>
+        <th>Generated</th>
+    </tr>
+    <tr>
+        <td>
+            <img id="target">
+        </td>
+        <td id="generated"></td>
+    </tr>
+</table>
+
+<pre class="hljs"><code class="hljs javascript">startClimbing(100, "imgs/mona_lisa.jpg")</code></pre>
+
+</body>
+<script>
+function makeCodable(fn){
+	const div = document.createElement("div")
+	const span = document.createElement("span")
+	const details = document.createElement("details")
+	const pre = document.createElement("pre")
+	const code = document.createElement("code")
+	pre.className = "hljs"
+	code.className = "hljs javascript"
+	code.innerHTML = fn.toString()
+	pre.appendChild(code)
+	details.appendChild(pre)
+	span.innerText = fn.name+"()"
+	div.appendChild(span)
+    div.appendChild(details)
+    div.style.margin = "20px"
+    div.style.padding = "10px"
+    div.style.border = "2px solid black"
+	return div
+}
+//[mutateTriangles, hillClimb].map(makeCodable).forEach(d => document.body.appendChild(d))
+
+const generatedDisplay = document.querySelector('#generated')
+const targetImg = document.querySelector('#target')
+
+function startClimbing(n_triangles, url='imgs/mona_lisa.jpg'){
+    downloadImage(url, function(env){
+        clearInterval(window.climbingLoop)
+        targetImg.src = url
+        const redraw = circles => drawPicture(circles, env, generatedDisplay)
+        window.climbingLoop = hillClimb(env, n_triangles, redraw)
+    })
+}
+startClimbing(100)
+</script>
+</html>
